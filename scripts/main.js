@@ -191,8 +191,6 @@ function isPopulationRepeating3PlusCycles(newWorld) {
         if (JSON.stringify(worldHistory[i]) == JSON.stringify(newWorld)) {
             let header = `Populiacija pasikartojo ${Number(worldHistory.length) - i} kartus`;
             populationEndInfo(header);
-
-            // console.log(`Pagautas periodas. Ilgis: ${Number(worldHistory.length) - i}`);
             clearInterval(populationCycle);
         }
         

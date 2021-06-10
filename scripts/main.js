@@ -1,5 +1,3 @@
-
-let chance = 0.65;
 let gameAreaSize = null;
 let world = [];
 let worldHistory = [];
@@ -14,6 +12,12 @@ let populationCycle = null;
 
 let submitGameAreaBtn = document.querySelector(`#submit-game-area-size`);
 let startWorldBtn = document.querySelector(`#start-world`);
+let chance = document.querySelector(`#select-chance`).value;
+let selectChance = document.querySelector(`#select-chance`);
+
+selectChance.addEventListener('change', function() {
+    chance = document.querySelector(`#select-chance`).value;
+});
 
 submitGameAreaBtn.addEventListener('click', function() {
     gameAreaSize = Number(document.querySelector(`#game-area-size`).value);
@@ -91,7 +95,8 @@ function isCellAlive(world, row, place) {
 function lifeCycle(previousWorld) {
     let newWorld = nextWorld(previousWorld);
     drawGameArea(newWorld);
-    isPopulationRepeating2Cycles(newWorld);
+    // isPopulationRepeating2Cycles(newWorld);
+    isPopulationRepeating3PlusCycles(newWorld);
     isPopulationStagnated(previousWorld, newWorld);
     world = newWorld;
     worldHistory.push(newWorld);
@@ -156,19 +161,13 @@ function isPopulationStagnated(previousWorld, newWorld) {
     if (JSON.stringify(previousWorld) === JSON.stringify(newWorld)) {
         clearInterval(populationCycle);
         populationEndInfo(header);
-        // console.log(world);
-        // console.log('STAGNATES-------------');
-        // console.log(worldHistory[worldHistory.length-4]);
-        // console.log(worldHistory[worldHistory.length-3]);
-        // console.log(worldHistory[worldHistory.length-2]);
-        // console.log(worldHistory[worldHistory.length-1]);
     }
     return;
 }
 
 //////////////////
 ///
-/// Checking if population repeats every 2 cycles.
+/// Checking if population repeats every 2 cycles. Oscillators period 2.
 ///
 //////////////////
 
@@ -177,14 +176,27 @@ function isPopulationRepeating2Cycles(newWorld) {
     if (JSON.stringify(newWorld) === JSON.stringify(worldHistory[worldHistory.length-2])) {
         clearInterval(populationCycle);
         populationEndInfo(header);
-        // console.log(world);
-        // console.log('REPEATS-------------');
-        // console.log(worldHistory[worldHistory.length-4]);
-        // console.log(worldHistory[worldHistory.length-3]);
-        // console.log(worldHistory[worldHistory.length-2]);
-        // console.log(worldHistory[worldHistory.length-1]);
     }
     return;
+}
+
+//////////////////
+///
+/// Checking if population repeats in more than two cycles. Oscillators period 3+.
+///
+//////////////////
+
+function isPopulationRepeating3PlusCycles(newWorld) { 
+    for (let i = 0; i < worldHistory.length; i++) {
+        if (JSON.stringify(worldHistory[i]) == JSON.stringify(newWorld)) {
+            let header = `Populiacija pasikartojo ${Number(worldHistory.length) - i} kartus`;
+            populationEndInfo(header);
+
+            // console.log(`Pagautas periodas. Ilgis: ${Number(worldHistory.length) - i}`);
+            clearInterval(populationCycle);
+        }
+        
+    }
 }
 
 //////////////////
@@ -197,3 +209,10 @@ function populationEndInfo(header) {
     let headerText = `${header}`;
     document.querySelector(`.end-of-cyle-header`).innerText = headerText;
 }
+
+// console.log(world);
+// console.log('REPEATS-------------');
+// console.log(worldHistory[worldHistory.length-4]);
+// console.log(worldHistory[worldHistory.length-3]);
+// console.log(worldHistory[worldHistory.length-2]);
+// console.log(worldHistory[worldHistory.length-1]);

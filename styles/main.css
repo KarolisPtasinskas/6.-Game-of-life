@@ -8,6 +8,10 @@
     text-align: center;
 }
 
+#submit-game-area-size {
+    margin-right: 15px;
+}
+
 .btn-container {
     margin-top: 1rem;
     text-align: center;

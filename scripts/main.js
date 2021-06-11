@@ -22,6 +22,7 @@ selectChance.addEventListener('change', function() {
 submitGameAreaBtn.addEventListener('click', function() {
     gameAreaSize = Number(document.querySelector(`#game-area-size`).value);
     world = [];
+    worldHistory = [];
     createWorld(gameAreaSize);
     
     document.querySelector(`#game-area-size`).value = ``;
@@ -95,9 +96,7 @@ function isCellAlive(world, row, place) {
 function lifeCycle(previousWorld) {
     let newWorld = nextWorld(previousWorld);
     drawGameArea(newWorld);
-    // isPopulationRepeating2Cycles(newWorld);
-    isPopulationRepeating3PlusCycles(newWorld);
-    isPopulationStagnated(previousWorld, newWorld);
+    isPopulationEvolving(previousWorld, newWorld);
     world = newWorld;
     worldHistory.push(newWorld);
 }
@@ -150,50 +149,21 @@ function checkNeighbours(previousWorld, row, place) {
     }
 }
 
-//////////////////
-///
-/// Checking if population stagnated (stoped growing or declining)
-///
-//////////////////
-
-function isPopulationStagnated(previousWorld, newWorld) {
-    let header = `Population stoped`;
+function isPopulationEvolving(previousWorld, newWorld) {
     if (JSON.stringify(previousWorld) === JSON.stringify(newWorld)) {
+        let header = `Population stoped`;
         clearInterval(populationCycle);
         populationEndInfo(header);
+        return;
     }
-    return;
-}
-
-//////////////////
-///
-/// Checking if population repeats every 2 cycles. Oscillators period 2.
-///
-//////////////////
-
-function isPopulationRepeating2Cycles(newWorld) {
-    let header = `Population repeats in 2 cycles forever...`;
-    if (JSON.stringify(newWorld) === JSON.stringify(worldHistory[worldHistory.length-2])) {
-        clearInterval(populationCycle);
-        populationEndInfo(header);
-    }
-    return;
-}
-
-//////////////////
-///
-/// Checking if population repeats in more than two cycles. Oscillators period 3+.
-///
-//////////////////
-
-function isPopulationRepeating3PlusCycles(newWorld) { 
-    for (let i = 0; i < worldHistory.length; i++) {
+    for (let i = (worldHistory.length - 1); i >= 0; i--) {
         if (JSON.stringify(worldHistory[i]) == JSON.stringify(newWorld)) {
-            let header = `Populiacija pasikartojo ${Number(worldHistory.length) - i} kartus`;
-            populationEndInfo(header);
+            let header = `Population cycled ${Number(worldHistory.length) - i} times`;
+            
             clearInterval(populationCycle);
-        }
-        
+            populationEndInfo(header);
+            return;
+        } 
     }
 }
 
@@ -210,6 +180,8 @@ function populationEndInfo(header) {
 
 // console.log(world);
 // console.log('REPEATS-------------');
+// console.log(worldHistory[worldHistory.length-6]);
+// console.log(worldHistory[worldHistory.length-5]);
 // console.log(worldHistory[worldHistory.length-4]);
 // console.log(worldHistory[worldHistory.length-3]);
 // console.log(worldHistory[worldHistory.length-2]);

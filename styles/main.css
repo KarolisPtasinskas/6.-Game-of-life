@@ -8,13 +8,17 @@
     text-align: center;
 }
 
-#submit-game-area-size {
-    margin-right: 15px;
-}
-
 .btn-container {
     margin-top: 1rem;
     text-align: center;
+}
+
+.mr-input {
+    margin-right: 15px;
+}
+
+.number-input {
+    width: 80px;
 }
 
 /* End of cycle information */
@@ -46,12 +50,17 @@
     border-bottom: none;
 }
 
-.gameCell {
-    width: 30px;
-    height: 30px;
+.game-cell {
+    /* width: 30px;
+    height: 30px; */
     border-right: 1px solid black;
     background-color: white;
 }
+
+/* .game-cell-size {
+    width: 30px;
+    height: 30px;
+} */
 
 .alive {
     background-color: green;

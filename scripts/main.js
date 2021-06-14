@@ -1,4 +1,6 @@
 let gameAreaSize = null;
+let gameCellSize = Number(document.querySelector(`#cell-size`).value);
+let cycleSpeed = Number(document.querySelector(`#select-speed`).value)
 let world = [];
 let worldHistory = [];
 let populationCycle = null;
@@ -14,16 +16,27 @@ let submitGameAreaBtn = document.querySelector(`#submit-game-area-size`);
 let startWorldBtn = document.querySelector(`#start-world`);
 let chance = document.querySelector(`#select-chance`).value;
 let selectChance = document.querySelector(`#select-chance`);
+let changeCellSize = document.querySelector(`#cell-size`);
+let changeCycleSpeed = document.querySelector(`#select-speed`);
 
 selectChance.addEventListener('change', function() {
     chance = document.querySelector(`#select-chance`).value;
 });
 
+changeCellSize.addEventListener('change', function() {
+    gameCellSize = Number(document.querySelector(`#cell-size`).value);
+});
+
+changeCycleSpeed.addEventListener('change', function() {
+    cycleSpeed = Number(document.querySelector(`#select-speed`).value);
+});
+
 submitGameAreaBtn.addEventListener('click', function() {
     gameAreaSize = Number(document.querySelector(`#game-area-size`).value);
+
     world = [];
     worldHistory = [];
-    createWorld(gameAreaSize);
+    createWorld(gameAreaSize, gameCellSize);
     
     document.querySelector(`#game-area-size`).value = ``;
     document.querySelector(`.end-of-cyle-header`).innerText = ``;
@@ -32,7 +45,7 @@ submitGameAreaBtn.addEventListener('click', function() {
 });
 
 startWorldBtn.addEventListener('click', function () {
-    populationCycle = setInterval(function(){lifeCycle(world)}, 300);
+    populationCycle = setInterval(function(){lifeCycle(world, gameCellSize)}, cycleSpeed);
 }); 
 
 //////////////////
@@ -41,14 +54,14 @@ startWorldBtn.addEventListener('click', function () {
 ///
 //////////////////
 
-function createWorld(gameAreaSize) {
+function createWorld(gameAreaSize, gameCellSize) {
     for (let i = 0; i < gameAreaSize; i++) {
         world.push([]);
         for (let e = 0; e < gameAreaSize; e++) {
             world[i].push(randomNumber());            
         }       
     }
-    drawGameArea(world);
+    drawGameArea(world, gameCellSize);
     worldHistory.push(world);
 }
 
@@ -66,13 +79,13 @@ function randomNumber() {
 ///
 //////////////////
 
-function drawGameArea(world) {
+function drawGameArea(world, gameCellSize) {
     let rowHTML = ``;
     for (let i = 0; i < world.length; i++) {
         let cellHTML = '';
         for (let e = 0; e < world.length; e++) {
             let isAlive = isCellAlive(world, i, e);
-            let cell = `<div class="gameCell ${isAlive}" id=""></div>`;
+            let cell = `<div style="width: ${gameCellSize}px; height: ${gameCellSize}px;" class="game-cell ${isAlive}" id=""></div>`;
             cellHTML += cell; 
         }
         rowHTML += `<div class="game-row-wrapper">${cellHTML}</div>`;
@@ -93,9 +106,9 @@ function isCellAlive(world, row, place) {
 ///
 //////////////////
 
-function lifeCycle(previousWorld) {
+function lifeCycle(previousWorld, gameCellSize) {
     let newWorld = nextWorld(previousWorld);
-    drawGameArea(newWorld);
+    drawGameArea(newWorld, gameCellSize);
     isPopulationEvolving(previousWorld, newWorld);
     world = newWorld;
     worldHistory.push(newWorld);
@@ -186,3 +199,15 @@ function populationEndInfo(header) {
 // console.log(worldHistory[worldHistory.length-3]);
 // console.log(worldHistory[worldHistory.length-2]);
 // console.log(worldHistory[worldHistory.length-1]);
+
+
+//Pakeisti CELL dydį.
+
+// let cellSize = document.querySelector(`#cell-size`).value;
+// let changeCellSize = document.querySelector(`#cell-size`);
+
+// changeCellSize.addEventListener('change', function() {
+    // let cellSize = Number(document.querySelector(`#cell-size`).value);
+    // document.querySelector(`.game-cell-size`).style.width = `${cellSize}px`;
+    // document.querySelector(`.game-cell-size`).style.height = `${cellSize}px`;
+// });

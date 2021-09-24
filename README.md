@@ -1,3 +1,6 @@
+Important! <br>
+Learning process material. There may be incomplete parts of the code.<br>
+
 6.-Game-of-life<br>
 https://karolisptasinskas.github.io/6.-Game-of-life/
 
